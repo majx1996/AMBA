@@ -1,3 +1,5 @@
+`define PRE_SIMULATION
+
 module async_ff #(
     parameter           DW  =   1,
     parameter shortreal TCK =   1,
@@ -9,6 +11,8 @@ module async_ff #(
     input  [DW-1:0]     D,
     output [DW-1:0]     Q
 );
+
+`ifdef PRE_SIMULATION
 
 logic           CP_rd;
 logic           CP_delay;
@@ -75,6 +79,20 @@ function detect_metastability;
     end
 endfunction
 
+`else // `PRE_SIMULATION
+logic [DW-1:0]  Q_ff;
+
+assign Q = Q_ff;
+
+always @ (posedge CP or negedge CLR) begin
+    if(~CLR) begin
+        Q_ff <= #TCK {DW{1'b0}};
+    end else begin
+        Q_ff <= #TCK D;
+    end
+end
+
+`endif // `PRE_SIMULATION
 
 
 endmodule
