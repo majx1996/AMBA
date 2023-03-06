@@ -1,4 +1,0 @@
-Error
--full64 -sverilog -Mupdate -timescale=1ns/10ps -o vsim -top tb_top -f /home/ICer/AMBA/rtl/async/sim.f -l /home/ICer/AMBA/rtl/async/run/comp.log -debug_all -lca -kdb 
--sverilog +plusargs_save +seed=776998298 -l /home/ICer/AMBA/rtl/async/run/sim.log -ucli -i /home/ICer/AMBA/script/dumpfsdb.tcl
-

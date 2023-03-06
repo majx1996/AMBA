@@ -1,6 +1,0 @@
-@elabcom rc file Version 1.0
-[oh]
-invokeDir = /home/ICer/AMBA/rtl/async/run
-hostCommand = -lib /home/ICer/AMBA/rtl/async/run/vsim.daidir/work -saveLevel -elab /home/ICer/AMBA/rtl/async/run/vsim.daidir/kdb -simflow -simdir /home/ICer/AMBA/rtl/async/run/vsim.daidir/kdb_libs -top tb_top -Lf work +disable_message+C00380+C00381 +disable_message+C003\
-88+C00389 -SNPS_ELABCOM -saveElab
-simType = VCS
