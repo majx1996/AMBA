@@ -1,9 +1,8 @@
-`define RD 1
-
 module async_ff #(
-    parameter   DW  =   1,
-    parameter   TS  =   0.5,
-    parameter   TH  =   0.5
+    parameter           DW  =   1,
+    parameter shortreal TCK =   1,
+    parameter shortreal TS  =   0.5,
+    parameter shortreal TH  =   0.5
 )(
     input               CP,
     input               CLR,
@@ -22,7 +21,7 @@ logic [3:0]     detected_counter;
 
 assign #TS D_delay = D;
 assign #TH CP_delay = CP;
-assign #`RD CP_rd = CP;
+assign #TCK CP_rd = CP;
 assign Q = Q_ff;
 
 always @ (posedge CP or negedge CLR) begin
@@ -69,7 +68,7 @@ end
 
 function detect_metastability; 
     begin
-        if(detected_counter[3:0] <= 4'hf) begin
+        if(detected_counter[3:0] <= 4'h1) begin
             $display("metastability detected at %m");
             detected_counter = detected_counter + 1;
         end

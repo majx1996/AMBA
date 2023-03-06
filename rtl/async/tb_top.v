@@ -1,13 +1,12 @@
-`define RD 1
-
 module tb_top ();
 
 
-localparam T_CLKS = 5   ; 
-localparam T_CLKD = 5   ; 
-localparam DW     = 8   ; 
-localparam TS     = 0.5 ; 
-localparam TH     = 0.5 ; 
+localparam           DW     = 8   ; 
+localparam shortreal TCK    = 1   ; 
+localparam shortreal TS     = 0.5 ; 
+localparam shortreal TH     = 0.5 ; 
+localparam shortreal T_CLKS = 5   ; 
+localparam shortreal T_CLKD = 5   ; 
 
 logic clk_s           ; 
 logic clk_d           ; 
@@ -53,7 +52,7 @@ initial begin
     repeat (30) begin
         # 1000;
         @ (posedge clk_s) begin
-            data_s <= #`RD $random();
+            data_s <= #TCK $random();
         end
     end
 
