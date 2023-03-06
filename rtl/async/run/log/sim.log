@@ -1,0 +1,141 @@
+Command: /home/ICer/AMBA/rtl/async/run/./vsim -sverilog +plusargs_save +seed=776998298 -l /home/ICer/AMBA/rtl/async/run/sim.log -ucli -i /home/ICer/AMBA/script/dumpfsdb.tcl
+Chronologic VCS simulator copyright 1991-2018
+Contains Synopsys proprietary information.
+Compiler version O-2018.09-SP2_Full64; Runtime version O-2018.09-SP2_Full64;  Mar  6 12:53 2023
+ucli% fsdbDumpfile "vsim.fsdb"
+*Verdi* Loading libsscore_vcs201809.so
+FSDB Dumper for VCS, Release Verdi_O-2018.09-SP2, Linux x86_64/64bit, 02/21/2019
+(C) 1996 - 2019 by Synopsys, Inc.
+*Verdi* FSDB WARNING: The FSDB file already exists. Overwriting the FSDB file may crash the programs that are using this file.
+*Verdi* : Create FSDB file 'vsim.fsdb'
+ucli% fsdbDumpvars
+*Verdi* : Begin traversing the scopes, layer (0).
+*Verdi* : End of traversing.
+ucli% fsdbDumpSVA
+*Verdi* : Begin traversing the SVA assertions, layer (0).
+*Verdi* : End of traversing the SVA assertions.
+ucli% fsdbDumpMDA
+*Verdi* : Begin traversing the MDAs, layer (0).
+*Verdi* : Enable +mda and +packedmda dumping.
+*Verdi* : End of traversing the MDAs.
+ucli% run
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+metastability detected at tb_top.dut.detect_metastability
+$finish called from file "/home/ICer/AMBA/rtl/async/tb_top.v", line 61.
+$finish at simulation time              3100070
+           V C S   S i m u l a t i o n   R e p o r t 
+Time: 31000700 ps
+CPU Time:      0.170 seconds;       Data structure size:   0.0Mb
+Mon Mar  6 12:53:05 2023
