@@ -1,0 +1,20 @@
+rc file Version 1.0
+
+[Design]
+COMPILE_PATH=/home/ICer/AMBA/rtl/async/run
+SystemC=FALSE
+UUM=FALSE
+KDB=TRUE
+USE_NOVAS_HOME=FALSE
+COSIM=FALSE
+TOP=tb_top 
+OPTION=-ssz -ssz -ssv -ssy 
+ELAB_OPTION=-ssz -ssz -ssv -ssy 
+ELAB=TRUE
+SIMV_WRAPPER=FALSE
+[vcs]
+RUN_ELABCOM=unset TURBO_LOG_DIR ;\rm -rf /home/ICer/AMBA/rtl/async/run/vsim.daidir/elabcomLog ;/home/synopsys/vcs/O-2018.09-SP2/linux64/bin/elabcom -logdir /home/ICer/AMBA/rtl/async/run/vsim.daidir/elabcomLog  -simvdaidir /home/ICer/AMBA/rtl/async/run/vsim.daidir  -lib /home/ICer/AMBA/rtl/async/run/vsim.daidir/work  -saveLevel  -elab /home/ICer/AMBA/rtl/async/run/vsim.daidir/kdb -simflow -simdir /home/ICer/AMBA/rtl/async/run/vsim.daidir/kdb_libs -top 'tb_top' -ssz -ssz -ssv -ssy  -Lf work +disable_message+C00380+C00381 +disable_message+C00388+C00389  >& /dev/null  && echo Success >& /home/ICer/AMBA/rtl/async/run/vsim.daidir/.elabcomReport || echo Fail >& /home/ICer/AMBA/rtl/async/run/vsim.daidir/.elabcomReport; \rm -rf /home/ICer/AMBA/rtl/async/run/vsim.daidir/work.lib++ /home/ICer/AMBA/rtl/async/run/vsim.daidir/kdb_libs/ 
+
+[Value]
+WREALX=ffff534e50535f58
+WREALZ=ffff534e50535f5a
