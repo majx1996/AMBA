@@ -12,6 +12,7 @@ logic                           prstn_i      ;
 logic                           pready_i     ; 
 logic [DATA_WIDTH-1:0]          prdata_i     ; 
 logic                           pslverr_i    ; 
+logic [ADDR_WIDTH-1:0]          reg_addr_i   ; 
 logic [DATA_WIDTH-1:0]          reg_wdata_i  ; 
 logic                           reg_enable_i ; 
 logic                           reg_write_i  ; 
@@ -49,7 +50,7 @@ apb_master #(
     .reg_addr_i                       (reg_addr_i[ADDR_WIDTH-1:0]  ), 
     .reg_wdata_i                      (reg_wdata_i[DATA_WIDTH-1:0] ), 
     .reg_enable_i                     (reg_enable_i                ), 
-    .reg_write_i                      (reg_write_i                 ), 
+    .reg_write_i                      (reg_write_i                 )
 );
 
 // System Site
@@ -73,39 +74,43 @@ initial begin
     reg_wdata_i  = 0 ; 
     reg_enable_i = 0 ; 
     reg_write_i  = 0 ; 
-    soc_write_data();
-    soc_write_data();
-    soc_read_data();
-    soc_read_data();
+    soc_write_data(32'hdeadbeaf, 32'h12345678);
+    soc_write_data(32'hdeadbeaf, 32'h12345678);
+    soc_read_data(32'hdeadbeaf);
+    soc_read_data(32'hdeadbeaf);
+    #100;
+    $finish();
 end
 
 // Slave Site
 initial begin
     pready_i     = 0 ; 
-    prdata_i     = 0 ; 
+    prdata_i     = 32'hdeadbeaf ; 
     pslverr_i    = 0 ;
-    slave_react();
-    slave_react();
-    slave_react();
-    slave_react();
-
-    #100;
-    $finish();
+    forever begin
+        slave_react();
+    end
 end
 
 
 task slave_react;
-    wait (penable_o) begin
-        repeat ($random(1, 5)) begin
+    bit random_flag = 1;
+
+    @ (posedge pclk_i) begin
+        if(penable_o) begin
+            while (random_flag) begin
+                @(posedge pclk_i);
+                random_flag = 0;
+            end
+            #`RD;
+            prdata_i = $random();
+            pready_i = 1'b1;
             @(posedge pclk_i);
+            # `RD;
+            pready_i = 1'b0;
         end
-        # `RD;
-        prdata_i = $random();
-        pready_i = 1'b1;
-        @(posedge pclk_i);
-        prdata_i = $random();
-        pready_i = $random();
     end
+
 endtask
 
 
@@ -129,7 +134,8 @@ task soc_write_data;
         @(posedge pclk_i);
     end
     @(posedge pclk_i) begin
-        reg_addr_i      = #`RD wr_addr;
+        #`RD;
+        reg_addr_i = wr_addr;
     end
 
     // push write data
@@ -137,7 +143,8 @@ task soc_write_data;
         @(posedge pclk_i);
     end
     @(posedge pclk_i) begin
-        reg_wdata_i     = #`RD wr_data;
+        #`RD;
+        reg_wdata_i = wr_data;
     end
 
     // assert enable & write
@@ -145,8 +152,9 @@ task soc_write_data;
         @(posedge pclk_i);
     end
     @(posedge pclk_i) begin
-        reg_write_i     = #`RD 1'b1;
-        reg_enable_i    = #`RD 1'b1;
+        #`RD;
+        reg_write_i = 1'b1;
+        reg_enable_i = 1'b1;
     end
 
     // deassert enable & write
@@ -154,8 +162,9 @@ task soc_write_data;
         @(posedge pclk_i);
     end
     @(posedge pclk_i) begin
-        reg_write_i     = #`RD 1'b0;
-        reg_enable_i    = #`RD 1'b0;
+        #`RD;
+        reg_write_i = 1'b0;
+        reg_enable_i = 1'b0;
     end
 endtask 
 
@@ -179,7 +188,8 @@ task soc_read_data;
         @(posedge pclk_i);
     end
     @(posedge pclk_i) begin
-        reg_addr_i      = #`RD rd_addr;
+        #`RD;
+        reg_addr_i      = rd_addr;
     end
 
     // assert enable & deassert write
@@ -187,8 +197,18 @@ task soc_read_data;
         @(posedge pclk_i);
     end
     @(posedge pclk_i) begin
-        reg_write_i     = #`RD 1'b0;
-        reg_enable_i    = #`RD 1'b1;
+        #`RD;
+        reg_write_i     = 1'b0;
+        reg_enable_i    = 1'b1;
+    end
+
+    // deassert enable
+    repeat (5) begin
+        @(posedge pclk_i);
+    end
+    @(posedge pclk_i) begin
+        #`RD;
+        reg_enable_i    = 1'b0;
     end
 
     // wait read data returned
@@ -202,7 +222,7 @@ task soc_read_data;
 
     // show results
     $display("//---------------------------------------------------");
-    $display("//            Rdata is %d", reg_rdata_o               );
+    $display("//            Rdata is 32'h%h", reg_rdata_o           );
     $display("//---------------------------------------------------");
 endtask 
 

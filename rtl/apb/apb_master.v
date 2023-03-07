@@ -89,7 +89,7 @@ end
 always @ (posedge pclk_i or negedge prstn_i) begin
     if(~prstn_i) begin
         state       <= #`RD IDLE;
-        paddr_o     <= #`RD '0;
+        paddr       <= #`RD '0;
         psel        <= #`RD '0;
         penable     <= #`RD '0;
         pwrite      <= #`RD '0;
@@ -97,7 +97,7 @@ always @ (posedge pclk_i or negedge prstn_i) begin
         reg_rdata   <= #`RD '0;
     end else begin
         case(state)
-            IDLE: begin // enumerate all outputs in IDLE state in any case
+            IDLE: begin
 
                 if(reg_enable_pos) begin
                     state       <= #`RD SETUP;
@@ -117,9 +117,7 @@ always @ (posedge pclk_i or negedge prstn_i) begin
                     pwrite      <= #`RD '0;
                     pwdata      <= #`RD '0;
                 end
-
                     penable     <= #`RD 1'b0;
-                    reg_rdata   <= #`RD '0;
             end // IDLE
 
             SETUP: begin
