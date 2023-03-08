@@ -28,6 +28,8 @@ alias rtl=${rtl_path}
 
 alias scope="cd ${proj}/work && verdi -f ${proj}/rtl/usb/rtl.f -top usbf_top"
 
+alias clean=${proj}/script/clean_run.sh
+
 echo "Source setenv completely!"
 
 echo "proj: ${proj}"
