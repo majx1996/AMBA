@@ -9,20 +9,20 @@ localparam DATA_WIDTH = 32;
 
 logic                           pclk_i       ; 
 logic                           prstn_i      ; 
-logic                           pready_i     ; 
-logic [DATA_WIDTH-1:0]          prdata_i     ; 
-logic                           pslverr_i    ; 
+logic                           pready       ; 
+logic [DATA_WIDTH-1:0]          prdata       ; 
+logic                           pslverr      ; 
 logic [ADDR_WIDTH-1:0]          reg_addr_i   ; 
 logic [DATA_WIDTH-1:0]          reg_wdata_i  ; 
 logic                           reg_enable_i ; 
 logic                           reg_write_i  ; 
-logic [ADDR_WIDTH-1:0]          paddr_o      ; 
-logic [2:0]                     pport_o      ; 
-logic                           psel_o       ; 
-logic                           penable_o    ; 
-logic                           pwrite_o     ; 
-logic [DATA_WIDTH-1:0]          pwdata_o     ; 
-logic [(DATA_WIDTH/8)-1:0]      pstrb_o      ; 
+logic [ADDR_WIDTH-1:0]          paddr        ; 
+logic [2:0]                     pport        ; 
+logic                           psel         ; 
+logic                           penable      ; 
+logic                           pwrite       ; 
+logic [DATA_WIDTH-1:0]          pwdata       ; 
+logic [(DATA_WIDTH/8)-1:0]      pstrb        ; 
 logic [DATA_WIDTH-1:0]          reg_rdata_o  ; 
 logic                           reg_idle_o   ; 
 
@@ -32,26 +32,49 @@ apb_master #(
     .DATA_WIDTH (DATA_WIDTH)
 ) dut(
     // Outputs
-    .paddr_o                          (paddr_o[ADDR_WIDTH-1:0]     ), 
-    .pport_o                          (pport_o[2:0]                ), 
-    .psel_o                           (psel_o                      ), 
-    .penable_o                        (penable_o                   ), 
-    .pwrite_o                         (pwrite_o                    ), 
-    .pwdata_o                         (pwdata_o[DATA_WIDTH-1:0]    ), 
-    .pstrb_o                          (pstrb_o[(DATA_WIDTH/8)-1:0] ), 
+    .paddr_o                          (paddr[ADDR_WIDTH-1:0]       ), 
+    .pport_o                          (pport[2:0]                  ), 
+    .psel_o                           (psel                        ), 
+    .penable_o                        (penable                     ), 
+    .pwrite_o                         (pwrite                      ), 
+    .pwdata_o                         (pwdata[DATA_WIDTH-1:0]      ), 
+    .pstrb_o                          (pstrb[(DATA_WIDTH/8)-1:0]   ), 
     .reg_rdata_o                      (reg_rdata_o[DATA_WIDTH-1:0] ), 
     .reg_idle_o                       (reg_idle_o                  ), 
     // Inputs
     .pclk_i                           (pclk_i                      ), 
     .prstn_i                          (prstn_i                     ), 
-    .pready_i                         (pready_i                    ), 
-    .prdata_i                         (prdata_i[DATA_WIDTH-1:0]    ), 
-    .pslverr_i                        (pslverr_i                   ), 
+    .pready_i                         (pready                      ), 
+    .prdata_i                         (prdata[DATA_WIDTH-1:0]      ), 
+    .pslverr_i                        (pslverr                     ), 
     .reg_addr_i                       (reg_addr_i[ADDR_WIDTH-1:0]  ), 
     .reg_wdata_i                      (reg_wdata_i[DATA_WIDTH-1:0] ), 
     .reg_enable_i                     (reg_enable_i                ), 
-    .reg_write_i                      (reg_write_i                 )
+    .reg_write_i                      (reg_write_i                 ) 
 );
+
+apb_slave_smodel #(
+    .ADDR_WIDTH (ADDR_WIDTH),
+    .DATA_WIDTH (DATA_WIDTH)
+) slave(
+    // Outputs
+    .pready_o                       (pready                    ), 
+    .prdata_o                       (prdata[DATA_WIDTH-1:0]    ), 
+    .pslverr_o                      (pslverr                   ), 
+    // Inputs
+    .pclk_i                         (pclk_i                    ), 
+    .prstn_i                        (prstn_i                   ), 
+    .paddr_i                        (paddr[ADDR_WIDTH-1:0]     ), 
+    .pport_i                        (pport[2:0]                ), 
+    .psel_i                         (psel                      ), 
+    .penable_i                      (penable                   ), 
+    .pwrite_i                       (pwrite                    ), 
+    .pwdata_i                       (pwdata[DATA_WIDTH-1:0]    ), 
+    .pstrb_i                        (pstrb[(DATA_WIDTH/8)-1:0] ), 
+    .reg_addr_high_i                (32'h5000FFFF              ), 
+    .reg_addr_low_i                 (32'h50002000              ) 
+);
+
 
 // System Site
 initial begin
@@ -74,44 +97,24 @@ initial begin
     reg_wdata_i  = 0 ; 
     reg_enable_i = 0 ; 
     reg_write_i  = 0 ; 
+    // Invalid Address
     soc_write_data(32'hdeadbeaf, 32'h12345678);
     soc_write_data(32'hdeadbeaf, 32'h12345678);
+    // Valid Address
+    soc_write_data(32'h50003FFF, 32'hdeadbeaf);
+    soc_write_data(32'h5000701C, 32'h87654321);
+    soc_write_data(32'h50002000, 32'h12345678);
+    soc_write_data(32'h5000FFFF, 32'h21436587);
+    // Invalid Address
     soc_read_data(32'hdeadbeaf);
-    soc_read_data(32'hdeadbeaf);
+    soc_read_data(32'h12345678);
+    // Valid Address
+    soc_read_data(32'h5000401C);
+    soc_read_data(32'h50002000);
+    soc_read_data(32'h5000FFFF);
     #100;
     $finish();
 end
-
-// Slave Site
-initial begin
-    pready_i     = 0 ; 
-    prdata_i     = 32'hdeadbeaf ; 
-    pslverr_i    = 0 ;
-    forever begin
-        slave_react();
-    end
-end
-
-
-task slave_react;
-    bit random_flag = 1;
-
-    @ (posedge pclk_i) begin
-        if(penable_o) begin
-            while (random_flag) begin
-                @(posedge pclk_i);
-                random_flag = 0;
-            end
-            #`RD;
-            prdata_i = $random();
-            pready_i = 1'b1;
-            @(posedge pclk_i);
-            # `RD;
-            pready_i = 1'b0;
-        end
-    end
-
-endtask
 
 
 task soc_write_data;
@@ -119,6 +122,11 @@ task soc_write_data;
     input   [DATA_WIDTH-1:0]    wr_data;
 
     bit wait_write;
+
+    $display("\n\n//---------------------------------------------------"                            );
+    $display("// Simulation time: %t", $time()                                                      );
+    $display("// Initiate a write transfer with address of 0x%H and data of 0x%H", wr_addr, wr_data );
+    $display("//---------------------------------------------------"                                );
 
     // wait FSM idle
     wait_write = 1'b1;
@@ -174,6 +182,11 @@ task soc_read_data;
 
     bit wait_read;
 
+    $display("\n\n//---------------------------------------------------");
+    $display("// Simulation time: %t", $time()                          );
+    $display("// Initiate a read transfer with address of 0x%H", rd_addr);
+    $display("//---------------------------------------------------"    );
+
     // wait FSM idle
     wait_read = 1'b1;
     while(wait_read) begin
@@ -222,7 +235,8 @@ task soc_read_data;
 
     // show results
     $display("//---------------------------------------------------");
-    $display("//            Rdata is 32'h%h", reg_rdata_o           );
+    $display("// Simulation time: %t", $time()                      );
+    $display("//    Rdata is 0x%H", reg_rdata_o                     );
     $display("//---------------------------------------------------");
 endtask 
 

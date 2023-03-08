@@ -1,8 +1,14 @@
 #!/usr/bin/perl
 
+use Getopt::Long;
+
 $init = "0x50002000";
 $end  = "0x5000FFFF";
 
+GetOptions(
+    'i|init=s' => \$init,
+    'e|end=s' => \$end,
+);
 
 @addr_arr = &addr_split($init, $end);
 $arr_len = @addr_arr;
