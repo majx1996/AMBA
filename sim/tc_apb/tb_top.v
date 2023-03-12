@@ -7,46 +7,32 @@ module tb_top ();
 localparam ADDR_WIDTH = 32;
 localparam DATA_WIDTH = 32;
 
+
 logic                           pclk_i       ; 
 logic                           prstn_i      ; 
-logic                           pready       ; 
-logic [DATA_WIDTH-1:0]          prdata       ; 
-logic                           pslverr      ; 
 logic [ADDR_WIDTH-1:0]          reg_addr_i   ; 
 logic [DATA_WIDTH-1:0]          reg_wdata_i  ; 
 logic                           reg_enable_i ; 
 logic                           reg_write_i  ; 
-logic [ADDR_WIDTH-1:0]          paddr        ; 
-logic [2:0]                     pport        ; 
-logic                           psel         ; 
-logic                           penable      ; 
-logic                           pwrite       ; 
-logic [DATA_WIDTH-1:0]          pwdata       ; 
-logic [(DATA_WIDTH/8)-1:0]      pstrb        ; 
 logic [DATA_WIDTH-1:0]          reg_rdata_o  ; 
 logic                           reg_idle_o   ; 
+
+
+apb_if #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH)) apb_if();
 
 
 apb_master #(
     .ADDR_WIDTH (ADDR_WIDTH),
     .DATA_WIDTH (DATA_WIDTH)
 ) dut(
+    // Interface
+    .apb_if                           (apb_if                      ), 
     // Outputs
-    .paddr_o                          (paddr[ADDR_WIDTH-1:0]       ), 
-    .pport_o                          (pport[2:0]                  ), 
-    .psel_o                           (psel                        ), 
-    .penable_o                        (penable                     ), 
-    .pwrite_o                         (pwrite                      ), 
-    .pwdata_o                         (pwdata[DATA_WIDTH-1:0]      ), 
-    .pstrb_o                          (pstrb[(DATA_WIDTH/8)-1:0]   ), 
     .reg_rdata_o                      (reg_rdata_o[DATA_WIDTH-1:0] ), 
     .reg_idle_o                       (reg_idle_o                  ), 
     // Inputs
     .pclk_i                           (pclk_i                      ), 
     .prstn_i                          (prstn_i                     ), 
-    .pready_i                         (pready                      ), 
-    .prdata_i                         (prdata[DATA_WIDTH-1:0]      ), 
-    .pslverr_i                        (pslverr                     ), 
     .reg_addr_i                       (reg_addr_i[ADDR_WIDTH-1:0]  ), 
     .reg_wdata_i                      (reg_wdata_i[DATA_WIDTH-1:0] ), 
     .reg_enable_i                     (reg_enable_i                ), 
@@ -57,22 +43,13 @@ apb_slave_smodel #(
     .ADDR_WIDTH (ADDR_WIDTH),
     .DATA_WIDTH (DATA_WIDTH)
 ) slave(
-    // Outputs
-    .pready_o                       (pready                    ), 
-    .prdata_o                       (prdata[DATA_WIDTH-1:0]    ), 
-    .pslverr_o                      (pslverr                   ), 
+    // Interface
+    .apb_if                         (apb_if       ), 
     // Inputs
-    .pclk_i                         (pclk_i                    ), 
-    .prstn_i                        (prstn_i                   ), 
-    .paddr_i                        (paddr[ADDR_WIDTH-1:0]     ), 
-    .pport_i                        (pport[2:0]                ), 
-    .psel_i                         (psel                      ), 
-    .penable_i                      (penable                   ), 
-    .pwrite_i                       (pwrite                    ), 
-    .pwdata_i                       (pwdata[DATA_WIDTH-1:0]    ), 
-    .pstrb_i                        (pstrb[(DATA_WIDTH/8)-1:0] ), 
-    .reg_addr_high_i                (32'h5000FFFF              ), 
-    .reg_addr_low_i                 (32'h50002000              ) 
+    .pclk_i                         (pclk_i       ), 
+    .prstn_i                        (prstn_i      ), 
+    .reg_addr_high_i                (32'h5000FFFF ), 
+    .reg_addr_low_i                 (32'h50002000 ) 
 );
 
 

@@ -14,16 +14,7 @@ module apb_master #(
 //----------------------
 //      APB
 //------------------------
-    output [ADDR_WIDTH-1:0]         paddr_o,
-    output [2:0]                    pport_o,
-    output                          psel_o,
-    output                          penable_o,
-    output                          pwrite_o,
-    output [DATA_WIDTH-1:0]         pwdata_o,
-    output [(DATA_WIDTH/8)-1:0]     pstrb_o,
-    input                           pready_i,
-    input  [DATA_WIDTH-1:0]         prdata_i,
-    input                           pslverr_i,
+    apb_if.mst                      apb_if,
 
 //----------------------
 //      CSR
@@ -43,11 +34,11 @@ module apb_master #(
 wire _unused_ok;
 
 assign _unused_ok = &{
-    pslverr_i, 
+    apb_if.pslverr, 
 1'b0};
 
-assign pport_o = 3'b000;                    // normal, secure, data
-assign pstrb_o = {(DATA_WIDTH/8){1'b1}};    // all data lanes are valid
+assign apb_if.pport = 3'b000;                    // normal, secure, data
+assign apb_if.pstrb = {(DATA_WIDTH/8){1'b1}};    // all data lanes are valid
 
 
 //----------------------
@@ -67,14 +58,14 @@ logic [DATA_WIDTH-1:0]  reg_rdata;
 logic                   reg_enable_d0;
 logic                   reg_enable_pos;
 
-assign reg_enable_pos = reg_enable_i && ~reg_enable_d0;
-assign reg_idle_o  = (state == IDLE);
-assign reg_rdata_o = reg_rdata ; 
-assign paddr_o     = paddr     ; 
-assign psel_o      = psel      ; 
-assign penable_o   = penable   ; 
-assign pwrite_o    = pwrite    ; 
-assign pwdata_o    = pwdata    ; 
+assign reg_enable_pos   = reg_enable_i && ~reg_enable_d0;
+assign reg_idle_o       = (state == IDLE);
+assign reg_rdata_o      = reg_rdata ; 
+assign apb_if.paddr     = paddr     ; 
+assign apb_if.psel      = psel      ; 
+assign apb_if.penable   = penable   ; 
+assign apb_if.pwrite    = pwrite    ; 
+assign apb_if.pwdata    = pwdata    ; 
 
 
 always @ (posedge pclk_i or negedge prstn_i) begin
@@ -126,29 +117,29 @@ always @ (posedge pclk_i or negedge prstn_i) begin
             end // SETUP
 
             ACCESS: begin
-                if((pready_i) & (~reg_enable_pos)) begin
+                if((apb_if.pready) & (~reg_enable_pos)) begin
                     state       <= #`RD IDLE;
                     paddr       <= #`RD paddr;
                     psel        <= #`RD 1'b0;
-                end else if((pready_i) & (reg_enable_pos)) begin
+                end else if((apb_if.pready) & (reg_enable_pos)) begin
                     state       <= #`RD SETUP;
                     paddr       <= #`RD reg_addr_i;
                     psel        <= #`RD 1'b1;
                 end
 
-                if(pready_i) begin
+                if(apb_if.pready) begin
                     penable     <= #`RD 1'b0;
                 end
 
-                if((pready_i) & (reg_enable_pos) & (reg_write_i)) begin
+                if((apb_if.pready) & (reg_enable_pos) & (reg_write_i)) begin
                     pwrite      <= #`RD 1'b1;
                     pwdata      <= #`RD reg_wdata_i;
-                end else if((pready_i) & (reg_enable_pos) & (~reg_write_i)) begin
+                end else if((apb_if.pready) & (reg_enable_pos) & (~reg_write_i)) begin
                     pwrite      <= #`RD 1'b0;
                 end
 
-                if(pready_i) begin
-                    reg_rdata   <= #`RD prdata_i;
+                if(apb_if.pready) begin
+                    reg_rdata   <= #`RD apb_if.prdata;
                 end
             end // ACCESS
         endcase
